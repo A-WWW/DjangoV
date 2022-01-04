@@ -1,0 +1,2 @@
+def object():
+    return None
