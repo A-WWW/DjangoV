@@ -1,9 +1,14 @@
+from django.contrib.auth import logout, login
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from .forms import *
 from .models import *
+from .utils import *
 
 menu = [{'title': "Site subject", 'url_name': 'about'},
         {'title': "Add object", 'url_name': 'add_page'},
@@ -11,7 +16,8 @@ menu = [{'title': "Site subject", 'url_name': 'about'},
         {'title': "To come in", 'url_name': 'login'}
 ]
 
-class ObjectHome(ListView):
+
+class ObjectHome(DataMixin, ListView):
     model = Object
     template_name = 'object/index.html'
     context_object_name = 'posts'
@@ -20,13 +26,12 @@ class ObjectHome(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Priority - ' + str(context['posts'][0].cat)
-        context['menu'] = menu
-        context['cat_selected'] = context['posts'][0].cat_id
-        return context
-    #
-    # def get_queryset(self):
-    #     return Object.objects.filter(is_published=True)
+        c_def = self.get_user_context(title="Main page")
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def get_queryset(self):
+        return Object.objects.filter(is_published=True)
+
 # def index(request):
 #     posts = Object.objects.all()
 #
@@ -46,17 +51,24 @@ class ObjectHome(ListView):
 
 
 def about(request):
-    return render(request, 'object/about.html', {'menu': menu, 'title': 'Page title 1'})
+    contact_list = Object.objects.all()
+    paginator = Paginator(contact_list, 3)
 
-class AddPage(CreateView):
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'object/about.html', {'page_obj': page_obj, 'menu': menu, 'title': 'Site subject'})
+
+
+class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
     template_name = 'object/addpage.html'
+    success_url = reverse_lazy('home')
+    login_url = reverse_lazy('home')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Add object'
-        context['menu'] = menu
-        return context
+        c_def = self.get_user_context(title="Add object")
+        return dict(list(context.items()) + list(c_def.items()))
 
 
 
@@ -76,9 +88,9 @@ class AddPage(CreateView):
 def contact(request):
     return HttpResponse("Обратная связь")
 
-
-def login(request):
-    return HttpResponse("Авторизация")
+#
+# def login(request):
+#     return HttpResponse("Авторизация")
 
 def show_post(request, post_id):
     post = get_object_or_404(Object, pk=post_id)
@@ -99,13 +111,18 @@ def show_post(request, post_id):
 
 
 
-class ObjectCategory(ListView):
+class ObjectCategory(DataMixin, ListView):
     model = Object
     template_name = 'object/index.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
         return Object.objects.filter(cat__id=self.kwargs['cat_id'], is_published=True)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Possibilities - ' + str(context['posts'][0].cat), cat_selected=context['posts'][0].cat_id)
+        return dict(list(context.items()) + list(c_def.items()))
 
 
 def show_category(request, cat_id):
@@ -124,5 +141,39 @@ def show_category(request, cat_id):
 
     return render(request, 'object/index.html', context=context)
 
+
+
 def pageNotFound(requst, exception):
     return HttpResponseNotFound('<h1>Page not found</h1>')
+
+class RegisterUser(DataMixin, CreateView):
+    form_class = RegisterUserForm
+    template_name = 'object/register.html'
+    success_url = reverse_lazy('login')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Registration")
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('home')
+
+
+class LoginUser(DataMixin, LoginView):
+    form_class = LoginUserForm
+    template_name = 'object/login.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Authorization")
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')

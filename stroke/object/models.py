@@ -20,7 +20,7 @@ class Object(models.Model):
     class Meta:
         verbose_name = 'Возможные направления'
         verbose_name_plural = 'Возможные направления'
-        ordering = ['title', 'time_create']
+        ordering = ['id']
 
 
 class Category(models.Model):
