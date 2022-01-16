@@ -91,7 +91,7 @@ ul.mainmenu {
 	margin: 0;
 	padding: 0;
 	height: 60px;
-	color: #00CED1;
+	color: #0000CD;
 	font-size: 20px;
 	overflow: hidden;
 }
@@ -103,11 +103,11 @@ ul.mainmenu li.logo {margin: 0;}
 ul.mainmenu li.last {float: right;}
 
 ul.mainmenu li a {
-	color: #00CED1;
+	color: #0000CD;
 	text-decoration: none;
 }
 ul.mainmenu li a:hover {
-	color: #00CED1;
+	color: #0000CD;
 }
 
 .panelitems {
@@ -358,7 +358,7 @@ ul.lang-list li a:hover {color: #fdc073;}
 
 	background: #87CEEB;
 	padding: 5px;
-	color: #aaa;
+	color: #000000;
 	font-size: 14px;
 	font-family: Verdana, Geneva, Arial, Helvetica;
 	text-align: left;
@@ -366,7 +366,7 @@ ul.lang-list li a:hover {color: #fdc073;}
 }
 #footer a {
 	text-decoration: underline;
-	color: #aaa;
+	color: #000000;
 }
 
 .form-input {
