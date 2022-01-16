@@ -1,4 +1,7 @@
+from django.db.models import Count
+
 from .models import *
+from django.core.cache import cache
 
 
 menu = [{'title': "Site subject", 'url_name': 'about'},
@@ -13,6 +16,10 @@ class DataMixin:
 
         def get_user_context(self, **kwargs):
                 context = kwargs
+                cats = cache.get('cats')
+                if not cats:
+                        cats = Category.objects.annotate(Count('object'))
+                        cache.set('cats', cats, 10)
                 cats = Category.objects.all()
                 context['menu'] = menu
                 context['cats'] = cats

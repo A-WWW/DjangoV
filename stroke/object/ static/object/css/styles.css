@@ -4,7 +4,7 @@ html, body {
 	padding: 0;
 	height: 100%;
 	width: 100%;
-	color: #444;
+	color: #5F9EA0;
 }
 
 a {
@@ -76,7 +76,7 @@ ul.list-articles li {
 .clear {clear: both;}
 
 .header {
-	background: #3F4137;
+	background: #87CEEB;
 	height: 60px;
 }
 
@@ -91,7 +91,7 @@ ul.mainmenu {
 	margin: 0;
 	padding: 0;
 	height: 60px;
-	color: #fdc073;
+	color: #00CED1;
 	font-size: 20px;
 	overflow: hidden;
 }
@@ -103,11 +103,11 @@ ul.mainmenu li.logo {margin: 0;}
 ul.mainmenu li.last {float: right;}
 
 ul.mainmenu li a {
-	color: #fdc073;
+	color: #00CED1;
 	text-decoration: none;
 }
 ul.mainmenu li a:hover {
-	color: #FDA83D;
+	color: #00CED1;
 }
 
 .panelitems {
@@ -146,7 +146,7 @@ ul.langitem li a:hover {
 	color: #FDA83D;
 }
 div.button {
-	background: #3F4137;
+	background: #87CEEB;
 	max-width: 200px;
 	margin: 0 auto;
 	padding: 5px 20px 5px 20px;
@@ -273,7 +273,7 @@ ul.lang-list {
 	list-style: none;
 	margin: 0;
 	padding: 14px 0 0 0;
-	background: #3F4137;
+	background: #87CEEB;
 	width: 100%;
 	height: 50px;
 	border-top: 1px solid #959A82;
@@ -356,7 +356,7 @@ ul.lang-list li a:hover {color: #fdc073;}
 #footer {
 	box-sizing: border-box;
 
-	background: #3F4137;
+	background: #87CEEB;
 	padding: 5px;
 	color: #aaa;
 	font-size: 14px;
