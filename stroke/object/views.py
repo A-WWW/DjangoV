@@ -44,12 +44,6 @@ class ObjectHome(DataMixin, ListView):
 #     return render(request, 'object/index.html', context = context)
 
 
-
-# def about(request):
-#     return render(request, 'r:/Django_1/DjangoV/stroke/object/templates/object/about.html', {'menu': menu,
-#                                                                                              'title': 'Page title 1'})
-
-
 def about(request):
     contact_list = Object.objects.all()
     paginator = Paginator(contact_list, 3)
@@ -76,7 +70,6 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
 #     if request.method == 'POST':
 #         form = AddPostForm(request.POST, request.FILES)
 #         if form.is_valid():
-#             #print(form.cleaned_data)
 #             form.save()
 #             return redirect('home')
 #     else:
@@ -113,10 +106,6 @@ def show_post(request, post_id):
 
     return render(request, 'object/post.html', context=context)
 
-# class ShowPost(DetailView):
-#     model = Object
-#     template_name = 'object/post.html'
-
 
 class ObjectCategory(DataMixin, ListView):
     model = Object
@@ -147,7 +136,6 @@ def show_category(request, cat_id):
     }
 
     return render(request, 'object/index.html', context=context)
-
 
 
 def pageNotFound(requst, exception):
