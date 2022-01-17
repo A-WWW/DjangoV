@@ -14,7 +14,7 @@ menu = [{'title': "Site subject", 'url_name': 'about'},
         {'title': "Add object", 'url_name': 'add_page'},
         {'title': "Feedback", 'url_name': 'contact'},
         {'title': "To come in", 'url_name': 'login'}
-]
+        ]
 
 
 class ObjectHome(DataMixin, ListView):
@@ -23,7 +23,6 @@ class ObjectHome(DataMixin, ListView):
     context_object_name = 'posts'
     allow_empty = False
 
-
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Main page")
@@ -31,6 +30,7 @@ class ObjectHome(DataMixin, ListView):
 
     def get_queryset(self):
         return Object.objects.filter(is_published=True).select_related('cat')
+
 
 # def index(request):
 #     posts = Object.objects.all()
@@ -65,7 +65,6 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-
 # def addpage(request):
 #     if request.method == 'POST':
 #         form = AddPostForm(request.POST, request.FILES)
@@ -90,7 +89,8 @@ class ContactFormView(DataMixin, FormView):
     def form_valid(self, form):
         print(form.cleaned_data)
         return redirect('home')
-#
+
+
 # def login(request):
 #     return HttpResponse("Авторизация")
 
@@ -117,13 +117,13 @@ class ObjectCategory(DataMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Possibilities - ' + str(context['posts'][0].cat), cat_selected=context['posts'][0].cat_id)
+        c_def = self.get_user_context(title='Possibilities - ' + str(context['posts'][0].cat),
+                                      cat_selected=context['posts'][0].cat_id)
         return dict(list(context.items()) + list(c_def.items()))
 
 
 def show_category(request, cat_id):
     posts = Object.objects.filter(cat_id=cat_id)
-
 
     if len(posts) == 0:
         raise Http404()
@@ -140,6 +140,7 @@ def show_category(request, cat_id):
 
 def pageNotFound(requst, exception):
     return HttpResponseNotFound('<h1>Page not found</h1>')
+
 
 class RegisterUser(DataMixin, CreateView):
     form_class = RegisterUserForm
@@ -168,6 +169,7 @@ class LoginUser(DataMixin, LoginView):
 
     def get_success_url(self):
         return reverse_lazy('home')
+
 
 def logout_user(request):
     logout(request)
